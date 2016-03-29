@@ -1,7 +1,10 @@
 package a04;
 
+import edu.princeton.cs.algs4.MinPQ;
+
 public class Solver
 {
+	private MinPQ pq;
 	// find a solution to the initial board (using the A* algorithm)
 	public Solver(Board initial)
 	{
