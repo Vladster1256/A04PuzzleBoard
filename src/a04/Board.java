@@ -1,5 +1,9 @@
 package a04;
 
+import java.util.Iterator;
+
+import edu.princeton.cs.algs4.Queue;
+
 public class Board
 {
 	private int[][] board;
@@ -14,7 +18,7 @@ public class Board
 		if (blocks[0].length == blocks.length)
 		{
 			board = blocks;
-			size = board.length;
+			size = blocks.length;
 		}
 
 	}
@@ -29,8 +33,25 @@ public class Board
 	// number of blocks out of place
 	public int hamming()
 	{
-		return 0;
+		int[] $OneDBoard = TwoDimentionalConversion();
+		int counter = 1;
+		int outofplace = 0;
 
+		for (int i = 0; i < $OneDBoard.length; i++)
+		{
+			if ($OneDBoard[i] == counter)
+			{
+				counter++;
+			} else if ($OneDBoard[$OneDBoard.length - 1] == 0 && counter == $OneDBoard.length)
+			{
+
+			} else
+			{
+				counter++;
+				outofplace++;
+			}
+		}
+		return outofplace;
 	}
 
 	// sum of Manhattan distances between blocks and goal
@@ -44,19 +65,25 @@ public class Board
 	public boolean isGoal()
 	{
 		int[] $OneDBoard = TwoDimentionalConversion();
-		int counter = 0;
+		int counter = 1;
 		boolean stillgood = true;
-		do
+
+		for (int i = 0; i < $OneDBoard.length; i++)
 		{
-			if ($OneDBoard[counter] == counter)
+			if ($OneDBoard[i] == counter)
 			{
 				stillgood = true;
-				counter ++;
+				counter++;
+			} else if ($OneDBoard[$OneDBoard.length - 1] == 0 && counter == $OneDBoard.length)
+			{
+				stillgood = true;
+				return stillgood;
 			} else
 			{
 				stillgood = false;
+				return stillgood;
 			}
-		} while (stillgood == true);
+		}
 		return stillgood;
 	}
 
@@ -70,14 +97,14 @@ public class Board
 	// does this board equal y?
 	public boolean equals(Object y)
 	{
-		return y.equals(this);
+		return this.hashCode() == y.hashCode();
 
 	}
 
 	// all neighboring boards
 	public Iterable<Board> neighbors()
 	{
-		return null;
+		return new NeighborIterator();
 
 	}
 
@@ -99,13 +126,27 @@ public class Board
 		return returnable;
 	}
 
+	private class NeighborIterator implements Iterable<Board>
+	{
+
+		@Override
+		public Iterator<Board> iterator()
+		{
+			Queue<Board> queue = new Queue<Board>();
+			
+			
+			
+			return (Iterator<Board>) queue;
+		}
+
+	}
+
 	/**
 	 * This helper method helps with converting from 2d to 1d to help with
 	 * checking solvability and other things, such as to string for example.
 	 * 
 	 * @return the 1d array of the board
 	 */
-
 	private int[] TwoDimentionalConversion()
 	{
 		int[] returnable = new int[size * size];
@@ -118,6 +159,27 @@ public class Board
 			}
 		}
 		return returnable;
+	}
+
+	/**
+	 * This helper method takes two cels and swaps them according to cordinates from the parameters
+	 * @param r1 Row from First cel
+	 * @param c1 Column from First cel
+	 * @param r2 Row from destination cel
+	 * @param c2 Column from destination cel
+	 */
+	private void swapCels(int r1, int c1, int r2, int c2)
+	{
+		if(r1 >= 0 && c1 >= 0 && r2 < board.length && c2 < board.length)
+		{
+			int tempCelValue = board[r1][c1];
+			board[r1][c1] = board[r2][c2];
+			board[r2][c2] = tempCelValue;
+		}
+		else
+		{
+			throw new IndexOutOfBoundsException("One of the row/column calls for some reason fell outside the board range");
+		}
 	}
 
 	// unit tests (not graded)
