@@ -33,8 +33,8 @@ public class Board
 	// number of blocks out of place
 	public int hamming()
 	{
-		int[] $OneDBoard = TwoDimentionalConversion();
-		int counter = 1;
+		int[] $OneDBoard = OneDimentionalConversion();
+		int counter = 1; // This checks for 
 		int outofplace = 0;
 
 		for (int i = 0; i < $OneDBoard.length; i++)
@@ -44,7 +44,7 @@ public class Board
 				counter++;
 			} else if ($OneDBoard[$OneDBoard.length - 1] == 0 && counter == $OneDBoard.length)
 			{
-
+				
 			} else
 			{
 				counter++;
@@ -64,27 +64,10 @@ public class Board
 	// is this board the goal board?
 	public boolean isGoal()
 	{
-		int[] $OneDBoard = TwoDimentionalConversion();
-		int counter = 1;
-		boolean stillgood = true;
-
-		for (int i = 0; i < $OneDBoard.length; i++)
-		{
-			if ($OneDBoard[i] == counter)
-			{
-				stillgood = true;
-				counter++;
-			} else if ($OneDBoard[$OneDBoard.length - 1] == 0 && counter == $OneDBoard.length)
-			{
-				stillgood = true;
-				return stillgood;
-			} else
-			{
-				stillgood = false;
-				return stillgood;
-			}
-		}
-		return stillgood;
+		if(hamming() == 0)
+			return true;
+		else
+			return false;
 	}
 
 	// is this board solvable?
@@ -97,8 +80,7 @@ public class Board
 	// does this board equal y?
 	public boolean equals(Object y)
 	{
-		return this.hashCode() == y.hashCode();
-
+		return false;
 	}
 
 	// all neighboring boards
@@ -147,7 +129,7 @@ public class Board
 	 * 
 	 * @return the 1d array of the board
 	 */
-	private int[] TwoDimentionalConversion()
+	private int[] OneDimentionalConversion()
 	{
 		int[] returnable = new int[size * size];
 		int counter = 0;
@@ -155,7 +137,9 @@ public class Board
 		{
 			for (int j = 0; j < size; j++)
 			{
+				
 				returnable[counter] = board[i][j];
+				counter++;
 			}
 		}
 		return returnable;
