@@ -1,8 +1,7 @@
 package a04;
 
 import java.util.Iterator;
-
-import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.Stack;
 
 public class Board
 {
@@ -71,18 +70,22 @@ public class Board
 			for (int j = 0; j < size; j++)
 			{
 				if (board[i][j] == 0)
-					continue;
-				int positiony = board[i][j] % size;
-				int positionx = board[i][j] / size;
-				if (positiony == 0)
 				{
-					positiony = size - 1;
-					--positionx;
+
 				} else
 				{
-					--positiony;
+					int positiony = board[i][j] % size;
+					int positionx = board[i][j] / size;
+					if (positiony == 0)
+					{
+						positiony = size - 1;
+						--positionx;
+					} else
+					{
+						--positiony;
+					}
+					manhattan += Math.abs(positionx - i) + Math.abs(positiony - j);
 				}
-				manhattan += Math.abs(positionx - i) + Math.abs(positiony - j);
 			}
 		}
 
@@ -102,21 +105,20 @@ public class Board
 	// is this board solvable?
 	public boolean isSolvable()
 	{
-		if(size % 2 == 0)
+		if (size % 2 == 0)
 		{
 			Point zeropoint = FindIndexOfElement(0);
-			if(manhattan() + zeropoint.getY() % 2 != 0)
+			if (manhattan() + zeropoint.getY() % 2 != 0)
 				return true;
 			else
 				return false;
-		}
-		else
+		} else
 		{
-			if(manhattan() % 2 == 0)
+			if (manhattan() % 2 == 0)
 				return true;
 			else
 				return false;
-			
+
 		}
 
 	}
@@ -166,13 +168,6 @@ public class Board
 
 	}
 
-	// all neighboring boards
-	public Iterable<Board> neighbors()
-	{
-		return new NeighborIterator();
-
-	}
-
 	// string representation of this board (in the output format specified
 	// below)
 	public String toString()
@@ -189,14 +184,21 @@ public class Board
 		}
 		return s.toString();
 	}
+	
+
+	// all neighboring boards
+	public Iterable<Board> neighbors()
+	{
+		return new NeighborIterator();
+
+	}
 
 	private class NeighborIterator implements Iterable<Board>
 	{
 
-		@Override
 		public Iterator<Board> iterator()
 		{
-			Queue<Board> queue = new Queue<Board>();
+			Stack<Board> stack = new Stack<Board>();
 
 			Point zeroIndex = FindIndexOfElement(0);
 			int x = zeroIndex.getX();
@@ -206,26 +208,26 @@ public class Board
 			{
 				Board board1 = new Board(board);
 				board1.swapCels(x, y, x - 1, y);
-				queue.enqueue(board1);
+				stack.push(board1);
 			} else if (x < size - 1 && x >= 0)
 			{
 				Board board2 = new Board(board);
 				board2.swapCels(x, y, x + 1, y);
-				queue.enqueue(board2);
+				stack.push(board2);
 			} else if (y > 0 && y <= size - 1)
 			{
 				Board board3 = new Board(board);
 				board3.swapCels(x, y, x, y - 1);
-				queue.enqueue(board3);
+				stack.push(board3);
 
 			} else if (y < size - 1)
 			{
 				Board board4 = new Board(board);
 				board4.swapCels(x, y, x, y + 1);
-				queue.enqueue(board4);
+				stack.push(board4);
 			}
 
-			return (Iterator<Board>) queue;
+			return (Iterator<Board>) stack;
 		}
 	}
 
