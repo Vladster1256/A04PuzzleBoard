@@ -189,46 +189,37 @@ public class Board
 	// all neighboring boards
 	public Iterable<Board> neighbors()
 	{
-		return new NeighborIterator();
+		Stack<Board> stack = new Stack<Board>();
 
-	}
+		Point zeroIndex = FindIndexOfElement(0);
+		int x = zeroIndex.getX();
+		int y = zeroIndex.getY();
 
-	private class NeighborIterator implements Iterable<Board>
-	{
-
-		public Iterator<Board> iterator()
+		if (x > 0 && x <= size - 1)
 		{
-			Stack<Board> stack = new Stack<Board>();
+			Board board1 = new Board(board);
+			board1.swapCels(x, y, x - 1, y);
+			stack.push(board1);
+		} else if (x < size - 1 && x >= 0)
+		{
+			Board board2 = new Board(board);
+			board2.swapCels(x, y, x + 1, y);
+			stack.push(board2);
+		} else if (y > 0 && y <= size - 1)
+		{
+			Board board3 = new Board(board);
+			board3.swapCels(x, y, x, y - 1);
+			stack.push(board3);
 
-			Point zeroIndex = FindIndexOfElement(0);
-			int x = zeroIndex.getX();
-			int y = zeroIndex.getY();
-
-			if (x > 0 && x <= size - 1)
-			{
-				Board board1 = new Board(board);
-				board1.swapCels(x, y, x - 1, y);
-				stack.push(board1);
-			} else if (x < size - 1 && x >= 0)
-			{
-				Board board2 = new Board(board);
-				board2.swapCels(x, y, x + 1, y);
-				stack.push(board2);
-			} else if (y > 0 && y <= size - 1)
-			{
-				Board board3 = new Board(board);
-				board3.swapCels(x, y, x, y - 1);
-				stack.push(board3);
-
-			} else if (y < size - 1)
-			{
-				Board board4 = new Board(board);
-				board4.swapCels(x, y, x, y + 1);
-				stack.push(board4);
-			}
-
-			return (Iterator<Board>) stack;
+		} else if (y < size - 1)
+		{
+			Board board4 = new Board(board);
+			board4.swapCels(x, y, x, y + 1);
+			stack.push(board4);
 		}
+
+		return stack;
+
 	}
 
 	/**
