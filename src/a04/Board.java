@@ -1,6 +1,8 @@
 package a04;
 
 import java.util.Iterator;
+
+import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.Stack;
 
 public class Board
@@ -184,7 +186,6 @@ public class Board
 		}
 		return s.toString();
 	}
-	
 
 	// all neighboring boards
 	public Iterable<Board> neighbors()
@@ -195,31 +196,25 @@ public class Board
 		int x = zeroIndex.getX();
 		int y = zeroIndex.getY();
 
-		if (x > 0 && x <= size - 1)
+		if (x > 0)
 		{
-			Board board1 = new Board(board);
-			board1.swapCels(x, y, x - 1, y);
-			stack.push(board1);
-		} else if (x < size - 1 && x >= 0)
+			int[][] board1 = swap(board, x, y, x - 1, y);
+			stack.push(new Board(board1));
+		} if (x < size - 1)
 		{
-			Board board2 = new Board(board);
-			board2.swapCels(x, y, x + 1, y);
-			stack.push(board2);
-		} else if (y > 0 && y <= size - 1)
+			int[][] board2 = swap(board, x, y, x + 1, y);
+			stack.push(new Board(board2));
+		} if (y > 0)
 		{
-			Board board3 = new Board(board);
-			board3.swapCels(x, y, x, y - 1);
-			stack.push(board3);
+			int[][] board3 = swap(board, x, y, x, y - 1);
+			stack.push(new Board(board3));
 
-		} else if (y < size - 1)
+		} if (y < size - 1)
 		{
-			Board board4 = new Board(board);
-			board4.swapCels(x, y, x, y + 1);
-			stack.push(board4);
+			int[][] board4 = swap(board, x, y, x, y + 1);
+			stack.push(new Board(board4));
 		}
-
 		return stack;
-
 	}
 
 	/**
@@ -273,13 +268,14 @@ public class Board
 	 * @param c2
 	 *            Column from destination cel
 	 */
-	private void swapCels(int r1, int c1, int r2, int c2)
+	private int[][] swap(int[][] grid, int r1, int c1, int r2, int c2)
 	{
 		if (r1 >= 0 && c1 >= 0 && r2 < board.length && c2 < board.length)
 		{
-			int tempCelValue = board[r1][c1];
-			board[r1][c1] = board[r2][c2];
-			board[r2][c2] = tempCelValue;
+			int tempCelValue = grid[r1][c1];
+			grid[r1][c1] = grid[r2][c2];
+			grid[r2][c2] = tempCelValue;
+			return grid;
 		} else
 		{
 			throw new IndexOutOfBoundsException("One of the row/column calls for some reason fell outside the board range");
