@@ -161,7 +161,7 @@ public class SolverVisualizer {
                     manhattan = board.manhattan();
                     for (int row = 0; row < N; row++) {
                         for (int col = 0; col < N; col++) {
-                            int tile = board.tileAt(row, col);
+                            int tile = board.tileAt(row, col); //todo fix
                             // if this position was previously empty
                             if (tileAt[row][col] == 0)
                                 movingTile = tile; // animate the tile into it

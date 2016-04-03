@@ -61,7 +61,7 @@ public class Board
 	}
 
 	// is this board solvable?
-	public boolean isSolvable()
+	public static boolean isSolvable()
 	{
 		return false;
 
