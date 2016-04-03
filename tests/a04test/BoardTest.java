@@ -7,15 +7,36 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import a04.Board;
+import edu.princeton.cs.algs4.In;
 
 public class BoardTest
 {
 
+	
+	public void setUp()
+	{
+		
+	}
+	
+	public int[][] setUpHardBoard()
+	{
+		In in = new In("./src/txt/puzzle36.txt");
+		int N = in.readInt();
+		int[][] blocks = new int[N][N];
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				blocks[i][j] = in.readInt();
+		int[][] intarray = new int[N][N];
+		return intarray;
+
+	}
+	
+	
 	private final Board board1 = new Board(new int[][] { { 0 } });
 	private final Board board2 = new Board(new int[][] { { 2, 0 }, { 1, 3 } });
 	private final Board board3 = new Board(new int[][] { { 8, 1, 3 }, { 4, 0, 2 }, { 7, 6, 5 } });
 	private final Board goalBoard = new Board(new int[][] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } });
-
+	private final Board hardboard = new Board(setUpHardBoard());
 	private final Board board4 = new Board(new int[][] { { 0, 2 }, { 1, 3 } });
 
 	@Test
@@ -82,6 +103,12 @@ public class BoardTest
 		assertEquals(true, board2.isSolvable());
 		assertEquals(true, board1.isSolvable());
 	}
+	
+	@Test
+	public void testIsHardBoardSolvable()
+	{
+		assertEquals(true,hardboard.isSolvable());
+	}
 
 	@Test
 	public void testIsSolvableFalse()
@@ -121,11 +148,6 @@ public class BoardTest
 	{
 		Board[] board2Neighbors = { new Board(new int[][] { { 0, 2 }, { 1, 3 } }), new Board(new int[][] { { 2, 3 }, { 1, 0 } }) };
 		Iterable<Board> neighbors = board2.neighbors();
-
-		for (Board item : neighbors)
-		{
-			System.out.print(item.toString());
-		}
 
 		assertEquals(board2Neighbors.length, count(neighbors)); // check number
 																// of neighbors

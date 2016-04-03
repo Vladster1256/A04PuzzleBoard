@@ -60,7 +60,7 @@ public class Solver
 				{
 					pq.insert(new Node(item,highestpriority, movecounter));
 				}
-				StdOut.println("Just Split More Neighboring Boards out of best one");
+				//StdOut.println("Just Split More Neighboring Boards out of best one");
 			}
 		}
 		return boardsolution;
@@ -114,7 +114,7 @@ public class Solver
 	public static void main(String[] args)
 	{
 		// create initial board from file
-		In in = new In("./src/txt/puzzle4x4-47.txt");
+		In in = new In("./src/txt/puzzle25.txt");
 		int N = in.readInt();
 		int[][] blocks = new int[N][N];
 		for (int i = 0; i < N; i++)
@@ -123,7 +123,7 @@ public class Solver
 		Board initial = new Board(blocks);
 
 		// check if puzzle is solvable; if so, solve it and output solution
-		if (initial.isSolvable())
+		if (initial.isSolvable() == true)
 		{
 			Solver solver = new Solver(initial);
 			StdOut.println("Minimum number of moves = " + solver.moves());
