@@ -37,17 +37,18 @@ public class Solver
 		Stack<Board> highestpriorityneighbors;
 		int movecounter = 0;
 		
-		
 		while(foundSolution == false)
 		{
 			highestpriority = pq.delMin();
 			if(highestpriority.board.isGoal())
 			{
+				solution.push(highestpriority);
 				foundSolution = true;
 				for(Node item: solution)
 				{
 					boardsolution.push(item.board);
 				}
+				StdOut.println("SOLVED!!");
 				return boardsolution;
 			}
 			else
@@ -59,12 +60,10 @@ public class Solver
 				{
 					pq.insert(new Node(item,highestpriority, movecounter));
 				}
-
+				StdOut.println("Just Split More Neighboring Boards out of best one");
 			}
-			
 		}
 		return boardsolution;
-		
 	}
 
 	private class Node implements Comparable<Node>
@@ -92,7 +91,6 @@ public class Solver
 		{
 			return board.toString() + priority;
 		}
-
 	}
 	
 	private static Comparator<Node> byLeastMoves()
@@ -102,7 +100,6 @@ public class Solver
 	
 	private static class ByLeastMoves implements Comparator<Node>
 	{
-
 		@Override
 		public int compare(Node n1, Node n2)
 		{
@@ -117,7 +114,7 @@ public class Solver
 	public static void main(String[] args)
 	{
 		// create initial board from file
-		In in = new In("./src/txt/puzzle01.txt");
+		In in = new In("./src/txt/puzzle4x4-47.txt");
 		int N = in.readInt();
 		int[][] blocks = new int[N][N];
 		for (int i = 0; i < N; i++)
