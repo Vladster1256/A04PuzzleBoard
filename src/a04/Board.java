@@ -107,22 +107,44 @@ public class Board
 	// is this board solvable?
 	public boolean isSolvable()
 	{
+		int[] test = OneDimentionalZeroRemover(OneDimentionalConversion(board));
+		int inversions = 0;
+		Point zeropoint = FindIndexOfElement(0);
+		int zerorow = zeropoint.getRow();
+
 		if (size % 2 == 0)
 		{
-			Point zeropoint = FindIndexOfElement(0);
-			if (manhattan() + zeropoint.getY() % 2 != 0)
+			for (int i = 0; i < test.length; i++)
+			{
+				for (int j = i + 1; j < test.length; j++)
+				{
+					if (test[i] > test[j])
+					{
+						inversions++;
+					}
+				}
+			}
+			if (inversions + zerorow % 2 == 1)
 				return true;
 			else
 				return false;
 		} else
 		{
-			if (manhattan() % 2 == 0)
+			for (int i = 0; i < test.length; i++)
+			{
+				for (int j = i + 1; j < test.length; j++)
+				{
+					if (test[i] > test[j])
+					{
+						inversions++;
+					}
+				}
+			}
+			if (inversions % 2 == 0)
 				return true;
 			else
 				return false;
-
 		}
-
 	}
 
 	// does this board equal y?
@@ -193,25 +215,29 @@ public class Board
 		Stack<Board> stack = new Stack<Board>();
 
 		Point zeroIndex = FindIndexOfElement(0);
-		int x = zeroIndex.getX();
-		int y = zeroIndex.getY();
+		// System.out.print(toString());
+		//System.out.println("Point:" + zeroIndex.toString());
+		int row = zeroIndex.getRow();
+		int col = zeroIndex.getCol();
 
-		if (x > 0)
+		if (row > 0)
 		{
-			int[][] board1 = swap(board, x, y, x - 1, y);
+			final int[][] board1 = swap(board, row, col, row - 1, col);
 			stack.push(new Board(board1));
-		} if (x < size - 1)
+		}
+		if (row < size - 1)
 		{
-			int[][] board2 = swap(board, x, y, x + 1, y);
+			final int[][] board2 = swap(board, row, col, row + 1, col);
 			stack.push(new Board(board2));
-		} if (y > 0)
+		}
+		if (col > 0)
 		{
-			int[][] board3 = swap(board, x, y, x, y - 1);
+			final int[][] board3 = swap(board, row, col, row, col - 1);
 			stack.push(new Board(board3));
-
-		} if (y < size - 1)
+		}
+		if (col < size - 1)
 		{
-			int[][] board4 = swap(board, x, y, x, y + 1);
+			final int[][] board4 = swap(board, row, col, row, col + 1);
 			stack.push(new Board(board4));
 		}
 		return stack;
@@ -231,8 +257,25 @@ public class Board
 		{
 			for (int j = 0; j < size; j++)
 			{
-
 				returnable[counter] = board[i][j];
+				counter++;
+			}
+		}
+		return returnable;
+	}
+
+	private int[] OneDimentionalZeroRemover(int[] board)
+	{
+		int[] returnable = new int[board.length - 1];
+		int counter = 0;
+		for (int i = 0; i < board.length; i++)
+		{
+			if (board[i] == 0)
+			{
+
+			} else
+			{
+				returnable[counter] = board[i];
 				counter++;
 			}
 		}
@@ -245,9 +288,9 @@ public class Board
 		{
 			for (int j = 0; j < size; j++)
 			{
-				if (board[i][j] == number)
+				if (board[j][i] == number)
 				{
-					return new Point(i, j);
+					return new Point(j, i);
 				}
 			}
 		}
@@ -256,8 +299,8 @@ public class Board
 	}
 
 	/**
-	 * This helper method takes two cels and swaps them according to cordinates
-	 * from the parameters
+	 * This helper method takes two cels, creates a new 2d array, and swaps the
+	 * cels on new 2d array according to cordinates from the parameters
 	 * 
 	 * @param r1
 	 *            Row from First cel
@@ -270,16 +313,18 @@ public class Board
 	 */
 	private int[][] swap(int[][] grid, int r1, int c1, int r2, int c2)
 	{
-		if (r1 >= 0 && c1 >= 0 && r2 < board.length && c2 < board.length)
+		int[][] temp = new int[size][size];
+		for (int i = 0; i < size; i++)
 		{
-			int tempCelValue = grid[r1][c1];
-			grid[r1][c1] = grid[r2][c2];
-			grid[r2][c2] = tempCelValue;
-			return grid;
-		} else
-		{
-			throw new IndexOutOfBoundsException("One of the row/column calls for some reason fell outside the board range");
+			for (int j = 0; j < size; j++)
+			{
+				temp[i][j] = grid[i][j];
+			}
 		}
+		int tempCelValue = temp[r1][c1];
+		temp[r1][c1] = temp[r2][c2];
+		temp[r2][c2] = tempCelValue;
+		return temp;
 	}
 
 	private int calculate1DSpot(int row, int col)
@@ -295,23 +340,28 @@ public class Board
 
 	private class Point
 	{
-		int x;
-		int y;
+		int row;
+		int col;
 
-		Point(int x, int y)
+		Point(int row, int col)
 		{
-			this.x = x;
-			this.y = y;
+			this.row = row;
+			this.col = col;
 		}
 
-		public int getX()
+		public int getRow()
 		{
-			return x;
+			return row;
 		}
 
-		public int getY()
+		public int getCol()
 		{
-			return y;
+			return col;
+		}
+
+		public String toString()
+		{
+			return row + " " + col + "\n";
 		}
 	}
 
