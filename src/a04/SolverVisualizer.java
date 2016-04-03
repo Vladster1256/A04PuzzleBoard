@@ -22,6 +22,9 @@ package a04;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
@@ -122,21 +125,22 @@ public class SolverVisualizer {
         }   
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // for each command-line argument
-        for (String filename : args) {
+//        for (String filename : args) {
 
             // read in the board specified in the filename
-            In in = new In(filename);
-            N = in.readInt();
+        	Scanner scanner = new Scanner(new File("puzzle01.txt"));
+    		N = scanner.nextInt();
             tileAt = new int[N][N];
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
-                    tileAt[i][j] = in.readInt();
+                    tileAt[i][j] = scanner.nextInt();
                 }
             }
             
-            title = filename;
+//            title = filename;
+            title = "puzzle";
             movingTile = 0; // show initial state for first 'move time'
             
             // solve the slider puzzle
@@ -176,6 +180,6 @@ public class SolverVisualizer {
                 StdDraw.show(ANIMATE_TIME + PAUSE_TIME);
             }
             StdOut.println(title);
-        }            
+//        }            
     }
 }

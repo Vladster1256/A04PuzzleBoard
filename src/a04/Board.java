@@ -98,6 +98,8 @@ public class Board
 	// is this board the goal board?
 	public boolean isGoal()
 	{
+		System.out.println("hamming:" + hamming());
+		
 		if (hamming() == 0)
 			return true;
 		else
