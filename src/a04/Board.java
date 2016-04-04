@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Board
 {
@@ -121,9 +122,11 @@ public class Board
 					if (test[i] > test[j])
 					{
 						inversions++;
+						
 					}
 				}
 			}
+			StdOut.print(inversions + zerorow);
 			if (inversions + zerorow % 2 == 1)
 				return true;
 			else
@@ -137,9 +140,11 @@ public class Board
 					if (test[i] > test[j])
 					{
 						inversions++;
+						
 					}
 				}
 			}
+			StdOut.print(inversions);
 			if (inversions % 2 == 0)
 				return true;
 			else
@@ -325,17 +330,6 @@ public class Board
 		temp[r1][c1] = temp[r2][c2];
 		temp[r2][c2] = tempCelValue;
 		return temp;
-	}
-
-	private int calculate1DSpot(int row, int col)
-	{
-		int col1 = col;
-		int row1 = row;
-		col1++;
-		row1++;
-		int returnable = (((size) * row1) - (size)) + col1;
-		return returnable - 1;
-
 	}
 
 	private class Point

@@ -1,139 +1,129 @@
 package a04;
 
-import java.util.Comparator;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
-public class Solver
-{
-	private MinPQ<Node> pq;
-	private Board initial;;
-	private boolean foundSolution = false;
 
 	// find a solution to the initial board (using the A* algorithm)
-	public Solver(Board initial)
-	{
-		this.initial = initial;
-		pq = new MinPQ<Node>(byLeastMoves());
+public class Solver {
+	private static final int SPACE = 0;
+	private Board board;
+	private MinPQ<Move> pq;
+
+	private Move lastMove;
+
+	public Solver(Board initial) {
+		this.board = initial;
+		pq = new MinPQ<Move>();
+		pq.insert(new Move(initial));
+		
+		while (pq.size() > 0 ) {
+			lastMove = expand(pq);
+			//System.out.println("Size:  " + pq.size());// todo remove
+			if (lastMove != null)
+				return;
+		}
 	}
 
 	// min number of moves to solve initial board
-	public int moves()
-	{
-		return initial.manhattan();
+	public int moves() {
+		return board.isSolvable() && lastMove != null ? lastMove.numMoves : -1;
 
 	}
 
 	// sequence of boards in a shortest solution
-	public Iterable<Board> solution()
-	{	
-		Stack<Node> solution = new Stack<Node>();
-		Stack<Board> boardsolution = new Stack<Board>();
-		pq.insert(new Node(initial, null, 0));
-		Node highestpriority;
-		Stack<Board> highestpriorityneighbors;
-		int movecounter = 0;
-		
-		while(foundSolution == false)
-		{
-			highestpriority = pq.delMin();
-			if(highestpriority.board.isGoal())
-			{
-				solution.push(highestpriority);
-				foundSolution = true;
-				for(Node item: solution)
-				{
-					boardsolution.push(item.board);
-				}
-				StdOut.println("SOLVED!!");
-				return boardsolution;
-			}
-			else
-			{
-				solution.push(highestpriority);
-				highestpriorityneighbors = (Stack<Board>) highestpriority.board.neighbors();
-				movecounter++;
-				for(Board item: highestpriorityneighbors)
-				{
-					pq.insert(new Node(item,highestpriority, movecounter));
-				}
-				//StdOut.println("Just Split More Neighboring Boards out of best one");
-			}
+	public Iterable<Board> solution() {
+		if (!board.isSolvable()){
+			return null;			
 		}
-		return boardsolution;
+
+		Stack<Board> moves = new Stack<Board>();
+		while (lastMove != null) {
+			moves.push(lastMove.board);
+			lastMove = lastMove.previous;
+		}
+
+		return moves;
+
 	}
 
-	private class Node implements Comparable<Node>
-	{
-		public Node previous;
-		public final Board board;
-		int moves = 0;
-		public int priority;
+	/** PRIVATE CLASS **/
+	private Move expand(MinPQ<Move> moves) {
+		if (moves.isEmpty()) {
+			return null;
+		}
+			
+		Move bestMove = moves.delMin();
+		
+		if (bestMove.board.isGoal()){
+			return bestMove;
+		}
+	
+		for (Board neighbor : bestMove.board.neighbors()) {
+			if (bestMove.previous == null || !neighbor.equals(bestMove.previous.board)) {
+				moves.insert(new Move(neighbor, bestMove));
+			}
+		}
+		
+		return null;
+	}
+	
+	boolean isSpace(int block) {
+		return block == SPACE;
+	}
 
-		public Node(Board board, Node previous, int nummoves)
-		{
+	/** PRIVATE CLASS **/
+	private class Move implements Comparable<Move> {
+		private Move previous;
+		private Board board;
+		private int numMoves = 0;
 
+		public Move(Board board) {
+			this.board = board;
+		}
+
+		private Move(Board board, Move previous) {
 			this.board = board;
 			this.previous = previous;
-			priority = this.board.manhattan() + nummoves;
+			this.numMoves = previous.numMoves + 1;
 		}
 
-		@Override
-		public int compareTo(Node arg0)
-		{
-			return this.priority - arg0.priority;
+		public int compareTo(Move move) {
+			return (board.manhattan() - move.board.manhattan()) + (this.numMoves - move.numMoves);
 		}
-
-		public String toString()
-		{
-			return board.toString() + priority;
-		}
-	}
-	
-	private static Comparator<Node> byLeastMoves()
-	{
-		return new ByLeastMoves();
-	}
-	
-	private static class ByLeastMoves implements Comparator<Node>
-	{
-		@Override
-		public int compare(Node n1, Node n2)
-		{
-			int priority1 = n1.priority;
-			int priority2 = n2.priority;
-			return priority1-priority2;
-		}
-		
 	}
 
+	/** TEST **/
 	// solve a slider puzzle (given below)
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) throws FileNotFoundException {
 		// create initial board from file
-		In in = new In("./src/txt/puzzle25.txt");
-		int N = in.readInt();
+		Scanner scanner = new Scanner(new File("./src/txt/puzzle47.txt"));
+		int N = scanner.nextInt();
 		int[][] blocks = new int[N][N];
-		for (int i = 0; i < N; i++)
-			for (int j = 0; j < N; j++)
-				blocks[i][j] = in.readInt();
+		for (int i = 0; i < N; i++){
+			for (int j = 0; j < N; j++) {
+				blocks[i][j] = scanner.nextInt();
+			}
+		}
+							
 		Board initial = new Board(blocks);
 
 		// check if puzzle is solvable; if so, solve it and output solution
-		if (initial.isSolvable() == true)
-		{
+		if (initial.isSolvable()) {
 			Solver solver = new Solver(initial);
 			StdOut.println("Minimum number of moves = " + solver.moves());
-			for (Board board : solver.solution())
+			for (Board board : solver.solution()){
 				StdOut.println(board);
+			}
 		}
 
 		// if not, report unsolvable
-		else
-		{
+		else {
 			StdOut.println("Unsolvable puzzle");
 		}
 	}

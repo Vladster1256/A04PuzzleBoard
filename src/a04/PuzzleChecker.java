@@ -55,6 +55,7 @@ public class PuzzleChecker {
             if (initial.isSolvable()) {
                 Stopwatch timer = new Stopwatch();
                 Solver solver = new Solver(initial);
+                solver.solution();
                 int moves = solver.moves();
                 double time = timer.elapsedTime();
                 StdOut.printf("%-25s %7d %8.2f\n", filename, moves, time);
