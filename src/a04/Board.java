@@ -1,6 +1,9 @@
 package a04;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.Stack;
@@ -126,8 +129,8 @@ public class Board
 					}
 				}
 			}
-			StdOut.print(inversions + zerorow);
-			if (inversions + zerorow % 2 == 1)
+			//StdOut.print(inversions + zerorow);
+			if (inversions + zerorow % 2 != 0)
 				return true;
 			else
 				return false;
@@ -144,7 +147,7 @@ public class Board
 					}
 				}
 			}
-			StdOut.print(inversions);
+			//StdOut.print(inversions);
 			if (inversions % 2 == 0)
 				return true;
 			else
@@ -360,8 +363,33 @@ public class Board
 	}
 
 	// unit tests (not graded)
-	public static void main(String[] args)
+	public static void main(String[] args) throws FileNotFoundException
 	{
+		// create initial board from file
+				Scanner scanner = new Scanner(new File("./src/txt/puzzle47.txt"));
+				int N = scanner.nextInt();
+				int[][] blocks = new int[N][N];
+				for (int i = 0; i < N; i++){
+					for (int j = 0; j < N; j++) {
+						blocks[i][j] = scanner.nextInt();
+					}
+				}
+									
+				Board initial = new Board(blocks);
+				//StdOut.print(initial.FindIndexOfElement(0).toString());
+				// check if puzzle is solvable; if so, solve it and output solution
+				if (initial.isSolvable()) {
 
+					Solver solver = new Solver(initial);
+					StdOut.println("Minimum number of moves = " + solver.moves());
+					for (Board board : solver.solution()){
+						StdOut.println(board);
+					}
+				}
+
+				// if not, report unsolvable
+				else {
+					StdOut.println("Unsolvable puzzle");
+				}
 	}
 }
