@@ -123,10 +123,8 @@ public class SolverVisualizer {
     }
     
     public static void main(String[] args) {
-        // for each command-line argument
-        for (String filename : args) {
+    		String filename = "./src/txt/puzzle00.txt";
 
-            // read in the board specified in the filename
             In in = new In(filename);
             N = in.readInt();
             tileAt = new int[N][N];
@@ -161,7 +159,7 @@ public class SolverVisualizer {
                     manhattan = board.manhattan();
                     for (int row = 0; row < N; row++) {
                         for (int col = 0; col < N; col++) {
-                            int tile = board.tileAt(row, col);
+                            int tile = board.tileAt(row,col);
                             // if this position was previously empty
                             if (tileAt[row][col] == 0)
                                 movingTile = tile; // animate the tile into it
@@ -178,4 +176,4 @@ public class SolverVisualizer {
             StdOut.println(title);
         }            
     }
-}
+
