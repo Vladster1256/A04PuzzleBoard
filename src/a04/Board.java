@@ -130,7 +130,7 @@ public class Board
 				}
 			}
 			//StdOut.print(inversions + zerorow);
-			if (inversions + zerorow % 2 != 0)
+			if ((inversions + zerorow) % 2 != 0)
 				return true;
 			else
 				return false;
@@ -272,6 +272,7 @@ public class Board
 		return returnable;
 	}
 
+	//private helper method to take a 1d conversion and return it without a 0 tile for checking if solvable
 	private int[] OneDimentionalZeroRemover(int[] board)
 	{
 		int[] returnable = new int[board.length - 1];
@@ -290,6 +291,7 @@ public class Board
 		return returnable;
 	}
 
+	//private helper method to find the index of a number and return it as a point object
 	private Point FindIndexOfElement(int number)
 	{
 		for (int i = 0; i < size; i++)
@@ -335,6 +337,7 @@ public class Board
 		return temp;
 	}
 
+	//Private point class to return the index of the element in a 2d array
 	private class Point
 	{
 		int row;
